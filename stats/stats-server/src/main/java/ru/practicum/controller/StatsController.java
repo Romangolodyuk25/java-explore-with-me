@@ -1,6 +1,7 @@
 package ru.practicum.controller;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.StatsDtoRequest;
 import ru.practicum.StatsDtoResponse;
@@ -11,12 +12,14 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class StatsController {
 
     private final StatsService statsService;
 
     @PostMapping("/hit")
     public StatsDtoRequest createHit(@Valid @RequestBody StatsDtoRequest statsDtoRequest) {
+        log.info("Объект для сохранения {} ", statsDtoRequest);
         return statsService.createHit(statsDtoRequest);
     }
 
