@@ -1,35 +1,24 @@
-version: '3.8'
+version: '3.1'
 services:
-  gateway:
-    build: main-service
-    image: explore_main-service_image
-    container_name: explore_main-service_container
-    ports:
-      - "8080:8080"
-    depends_on:
-      - server
-    environment:
-      - SHAREIT_SERVER_URL=http://server:9090
-
-  server:
-    build: stats-server
-    image: explore_stats_server_image
-    container_name: explore_stats_server_container
+  stats-server:
+    build: stats-service/stats-server
+    image: stats_server_image1
+    container_name: stats-server
     ports:
       - "9090:9090"
     depends_on:
-      - db
+      - stats-db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/explore_with_me
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/stats-db
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
 
-  db:
-    image: postgres:14-alpine
-    container_name: explore_with_me_db
+  stats-db:
+    image: postgres:13.7-alpine
+    container_name: stats-db
     ports:
       - "6541:5432"
     environment:
-      - POSTGRES_DB=postgres
+      - POSTGRES_DB=stats-db
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
