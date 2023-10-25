@@ -3,7 +3,7 @@ services:
   stats-server:
     build: stats-server
     image: stats_server_image1
-    container_name: stats-server
+    container_name: stats/stats-server
     ports:
       - "9090:9090"
     depends_on:
@@ -22,14 +22,4 @@ services:
       - POSTGRES_DB=stats-db
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
-  main-service:
-    build: main-service
-    image: main_service_image
-    container_name: main_service_container
-    ports:
-      - "8080:8080"
-    depends_on:
-      - server
-    environment:
-        - SHAREIT_SERVER_URL=http://server:8080
 
