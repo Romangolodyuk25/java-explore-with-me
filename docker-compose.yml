@@ -13,6 +13,19 @@ services:
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
 
+  stats-server:
+    build: stats-server
+    image: stats_server_image1
+    container_name: stats/stats-server
+    ports:
+      - "9090:9090"
+    depends_on:
+      - stats-db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+
   stats-db:
     image: postgres:13.7-alpine
     container_name: stats-db
