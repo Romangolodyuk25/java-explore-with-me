@@ -9,9 +9,20 @@ services:
     depends_on:
       - stats-db
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/stats-db
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/postgres
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+
+  main-service:
+    build: main-service
+    image: main_service_image
+    container_name: main_service_container
+    ports:
+      - "8080:8080"
+    depends_on:
+      - server
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://stats-db:5432/postgres
 
   stats-db:
     image: postgres:13.7-alpine
