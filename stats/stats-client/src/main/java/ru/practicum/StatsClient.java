@@ -1,10 +1,10 @@
 package ru.practicum;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-import java.net.URISyntaxException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -12,17 +12,19 @@ import java.util.Map;
 
 @Component
 public class StatsClient {
-    public static final String PATH = "http://localhost:9090";
 
-    public static final DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    @Value("${stats-server.url:http://localhost:9090}")
+    private String path;
+
+    static final DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
     private RestTemplate rest = new RestTemplate();
 
     public StatsDtoRequest createHit(StatsDtoRequest statsDtoRequest) {
-        HttpEntity<StatsDtoRequest> request = new HttpEntity<>(statsDtoRequest);
-        return rest.exchange(PATH + "/hit", HttpMethod.POST, request, StatsDtoRequest.class).getBody();
+        HttpEntity<StatsDtoRequest> request = new HttpEntity<>(statsDtoRequest, defaultHeaders());
+        return rest.exchange(path + "/hit", HttpMethod.POST, request, StatsDtoRequest.class).getBody();
     }
 
-    public List<StatsDtoResponse> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) throws URISyntaxException {
+    public List<StatsDtoResponse> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
         String startTime = start.format(FORMAT);
         String endTime = end.format(FORMAT);
         String newUris = String.join(",", uris);
@@ -34,7 +36,7 @@ public class StatsClient {
                 "unique", unique != null ? unique : false
         );
 
-        return rest.getForObject(PATH + "/stats?start={start}&end={end}&uris={newUris}&unique={unique}", List.class, parameters);
+        return rest.getForObject(path + "/stats?start={start}&end={end}&uris={newUris}&unique={unique}", List.class, parameters, defaultHeaders());
     }
 
     private HttpHeaders defaultHeaders() {

@@ -9,7 +9,6 @@ import ru.practicum.model.Hit;
 import ru.practicum.repository.StatsRepository;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 
@@ -18,7 +17,6 @@ import java.util.List;
 public class StatsServiceImpl implements StatsService {
 
     private final StatsRepository statsRepository;
-    public static final DateTimeFormatter FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     @Override
     public StatsDtoRequest createHit(StatsDtoRequest statsDtoRequest) {
@@ -27,9 +25,9 @@ public class StatsServiceImpl implements StatsService {
     }
 
     @Override
-    public List<StatsDtoResponse> getStats(String start, String end, String[] uris, Boolean unique) {
-        LocalDateTime timeStart = LocalDateTime.parse(start, FORMAT);
-        LocalDateTime timeEnd = LocalDateTime.parse(end, FORMAT);
+    public List<StatsDtoResponse> getStats(String start, String end, List<String> uris, Boolean unique) {
+        LocalDateTime timeStart = LocalDateTime.parse(start, StatsDtoMapper.FORMAT);
+        LocalDateTime timeEnd = LocalDateTime.parse(end, StatsDtoMapper.FORMAT);
 
         if (uris == null) {
             return statsRepository.findHitsWithoutUris(timeStart, timeEnd);

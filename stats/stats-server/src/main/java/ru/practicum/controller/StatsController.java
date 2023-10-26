@@ -1,5 +1,6 @@
 package ru.practicum.controller;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -24,9 +25,9 @@ public class StatsController {
     }
 
     @GetMapping("/stats")
-    public List<StatsDtoResponse> getStats(@Valid @RequestParam String start,
-                                           @RequestParam String end,
-                                           @RequestParam(required = false) String[] uris,
+    public List<StatsDtoResponse> getStats(@Valid @NonNull @RequestParam String start,
+                                           @NonNull @RequestParam String end,
+                                           @RequestParam(required = false) List<String> uris,
                                            @RequestParam(required = false) Boolean unique) {
         return statsService.getStats(start, end, uris, unique);
     }

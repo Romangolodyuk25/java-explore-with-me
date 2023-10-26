@@ -10,6 +10,6 @@ public interface StatsService {
 
     StatsDtoRequest createHit(StatsDtoRequest statsDtoRequest);
 
-    List<StatsDtoResponse> getStats(String start, String end, String[] unis, Boolean unique);
+    List<StatsDtoResponse> getStats(String start, String end, List<String> unis, Boolean unique);
 
 }
