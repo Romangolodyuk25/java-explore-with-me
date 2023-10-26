@@ -22,7 +22,7 @@ public class StatsClient {
         return rest.exchange(PATH + "/hit", HttpMethod.POST, request, StatsDtoRequest.class).getBody();
     }
 
-    public List<StatsDtoResponse> getStats(LocalDateTime start, LocalDateTime end, List<String> uris , Boolean unique) throws URISyntaxException {
+    public List<StatsDtoResponse> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) throws URISyntaxException {
         String startTime = start.format(FORMAT);
         String endTime = end.format(FORMAT);
         String newUris = String.join(",", uris);
