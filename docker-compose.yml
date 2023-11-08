@@ -2,6 +2,7 @@ version: '3.8'
 services:
   stats-server:
     build: stats/stats-server/
+    image: stats-server
     container_name: stats-server
     ports:
       - "9090:9090"
@@ -23,7 +24,8 @@ services:
 
   main-service:
     build: main-service/
-    container_name: main_service
+    image: main-service
+    container_name: main-service
     ports:
         - "8080:8080"
     depends_on:
