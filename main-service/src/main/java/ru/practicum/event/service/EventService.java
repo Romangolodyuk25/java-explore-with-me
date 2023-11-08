@@ -9,7 +9,6 @@ import ru.practicum.request.UpdateEventAdminRequest;
 import ru.practicum.request.UpdateEventUserRequest;
 
 import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public interface EventService {

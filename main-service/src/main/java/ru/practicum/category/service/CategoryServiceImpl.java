@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class CategoryServiceImpl implements  CategoryService {
+public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
     private final EventRepository eventRepository;
@@ -64,16 +64,16 @@ public class CategoryServiceImpl implements  CategoryService {
 
     @Override
     public CategoryDto getCategoryById(long catId) {
-       Category receivedCategory = categoryRepository.findById(catId).orElseThrow(() -> new CategoryNotExistException("category not exist"));
-       log.info("Категория {} получена", receivedCategory);
-       return CategoryDtoMapper.toCategoryDto(receivedCategory);
+        Category receivedCategory = categoryRepository.findById(catId).orElseThrow(() -> new CategoryNotExistException("category not exist"));
+        log.info("Категория {} получена", receivedCategory);
+        return CategoryDtoMapper.toCategoryDto(receivedCategory);
     }
 
     private void validateCategory(NewCategoryDto newCategoryDto) {
-        if (newCategoryDto.getName()==null || newCategoryDto.getName().isEmpty() || newCategoryDto.getName().isBlank()) {
+        if (newCategoryDto.getName() == null || newCategoryDto.getName().isEmpty() || newCategoryDto.getName().isBlank()) {
             throw new ValidationException();
         }
-        if(newCategoryDto.getName().length() > 50) {
+        if (newCategoryDto.getName().length() > 50) {
             throw new ValidationException("Ошибка валидации");
         }
     }

@@ -45,7 +45,7 @@ public class CompilationServiceImpl implements CompilationService {
         validateForUpdateCompilation(updateCompilationRequest);
 
         List<Event> events = new ArrayList<>();
-        if(updateCompilationRequest.getEvents() != null) {
+        if (updateCompilationRequest.getEvents() != null) {
             for (Integer eventId : updateCompilationRequest.getEvents()) {
                 Event receivedEvent = eventRepository.findById((long) eventId).orElseThrow(() -> new EventNotExistException("eventNotExist"));
                 events.add(receivedEvent);
@@ -73,7 +73,7 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Override
     public List<CompilationDto> getCompilations(Boolean pinned, Integer from, Integer size) {
-        Pageable page = PageRequest.of(from / size , size);
+        Pageable page = PageRequest.of(from / size, size);
         return compilationRepository.findByPinned(pinned, page).stream()
                 .map(CompilationDtoMapper::toCompilationDto)
                 .collect(Collectors.toList());
@@ -94,7 +94,7 @@ public class CompilationServiceImpl implements CompilationService {
         }
 
         List<Event> events = new ArrayList<>();
-        if(newCompilationDto.getEvents() != null) {
+        if (newCompilationDto.getEvents() != null) {
             for (Integer eventId : newCompilationDto.getEvents()) {
                 Event receivedEvent = eventRepository.findById((long) eventId).orElseThrow(() -> new EventNotExistException("eventNotExist"));
                 events.add(receivedEvent);
@@ -105,7 +105,7 @@ public class CompilationServiceImpl implements CompilationService {
 
     private void validateForUpdateCompilation(UpdateCompilationRequest updateCompilationRequest) {
         if (updateCompilationRequest.getTitle() != null) {
-            if(updateCompilationRequest.getTitle().length() > 50 || updateCompilationRequest.getTitle().isBlank()) {
+            if (updateCompilationRequest.getTitle().length() > 50 || updateCompilationRequest.getTitle().isBlank()) {
                 throw new ValidationException("Ошибка валидации");
             }
         }

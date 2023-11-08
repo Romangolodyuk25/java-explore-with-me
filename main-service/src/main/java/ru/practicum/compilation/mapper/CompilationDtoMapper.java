@@ -3,7 +3,6 @@ package ru.practicum.compilation.mapper;
 import lombok.experimental.UtilityClass;
 import ru.practicum.compilation.CompilationDto;
 import ru.practicum.compilation.NewCompilationDto;
-import ru.practicum.compilation.UpdateCompilationRequest;
 import ru.practicum.compilation.model.Compilation;
 import ru.practicum.event.EventShortDto;
 import ru.practicum.event.mapper.EventDtoMapper;
@@ -32,7 +31,7 @@ public class CompilationDtoMapper {
                 .id(compilation.getId())
                 .title(compilation.getTitle())
                 .pinned(compilation.getPinned() != null ? compilation.getPinned() : false)
-                .events(eventShortDtos)//здесь нужно испольщовать маппер что бы получить EventDto
+                .events(eventShortDtos) //здесь нужно испольщовать маппер что бы получить EventDto
                 .build();
     }
 

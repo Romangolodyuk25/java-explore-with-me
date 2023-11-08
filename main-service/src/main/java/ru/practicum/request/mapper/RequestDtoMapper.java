@@ -12,9 +12,9 @@ public class RequestDtoMapper {
 
     public static ParticipationRequestDto toParticipationRequestDto(Request request) {
         return ParticipationRequestDto.builder()
-                .id((int)request.getId())
+                .id((int) request.getId())
                 .created(FORMATTER.format(request.getCreated()))
-                .event((int)request.getEvent().getId())
+                .event((int) request.getEvent().getId())
                 .requester(Math.toIntExact(request.getRequester().getId()))
                 .status(request.getStatus().name())
                 .build();

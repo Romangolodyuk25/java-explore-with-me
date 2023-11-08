@@ -182,8 +182,8 @@ public class EventServiceImpl implements EventService {
                 .map(Event::getId)
                 .collect(Collectors.toList());
 
-            Map<Long, Long> veiws = getStatsForEvents(eventRepository.getMinDate(ids), ids);
-            //id -> количество просмотров
+        Map<Long, Long> veiws = getStatsForEvents(eventRepository.getMinDate(ids), ids);
+        //id -> количество просмотров
         List<EventFullDto> finalList = new ArrayList<>();
         for (Event e : receivedEvent) {
             finalList.add(EventDtoMapper.toFullDtoWithViews(e, veiws.getOrDefault(e.getId(), 0L)));
@@ -191,7 +191,7 @@ public class EventServiceImpl implements EventService {
         // РЕАЛИЗОВАТЬ ДОБАВЛЕНИЕ ПРОСМОТРА
 
         if (receivedEvent.size() == 0) throw new EventNotExistException("Event not exist");
-        Category category = categoryRepository.findById((long)finalList.get(0).getCategory().getId()).orElseThrow();
+        Category category = categoryRepository.findById((long) finalList.get(0).getCategory().getId()).orElseThrow();
         User user = userRepository.findById(finalList.get(0).getInitiator().getId()).orElseThrow();
         Event finalEvent = EventDtoMapper.toEventForEventFull(finalList.get(0), category, user);
         return EventDtoMapper.toEventFullDto(finalEvent);

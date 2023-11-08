@@ -8,7 +8,6 @@ import ru.practicum.event.EventShortDto;
 import ru.practicum.event.NewEventDto;
 import ru.practicum.event.model.Event;
 import ru.practicum.location.Location;
-import ru.practicum.request.UpdateEventUserRequest;
 import ru.practicum.user.mapper.UserDtoMapper;
 import ru.practicum.user.model.User;
 
@@ -41,7 +40,7 @@ public class EventDtoMapper {
 
     public static EventFullDto toEventFullDto(Event event) {
         return EventFullDto.builder()
-                .id((int)event.getId())
+                .id((int) event.getId())
                 .description(event.getDescription())
                 .createdOn(FORMATTER.format(event.getCreatedOn()))
                 .eventDate(FORMATTER.format(event.getEventDate()))
@@ -92,20 +91,6 @@ public class EventDtoMapper {
                 .paid(event.getPaid())
                 .title(event.getTitle())
                 .views(event.getViews())
-                .build();
-    }
-
-    public static NewEventDto newEventDtoForValidation(UpdateEventUserRequest updateEventUserRequest) {
-        return NewEventDto.builder()
-                .annotation(updateEventUserRequest.getAnnotation())
-                .category(updateEventUserRequest.getCategory())
-                .description(updateEventUserRequest.getDescription())
-                .eventDate(updateEventUserRequest.getEventDate())
-                .location(updateEventUserRequest.getLocation())
-                .paid(updateEventUserRequest.getPaid())
-                .participantLimit(updateEventUserRequest.getParticipantLimit())
-                .requestModeration(updateEventUserRequest.getRequestModeration())
-                .title(updateEventUserRequest.getTitle())
                 .build();
     }
 

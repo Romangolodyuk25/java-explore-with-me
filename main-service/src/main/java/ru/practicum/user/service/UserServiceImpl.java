@@ -13,7 +13,6 @@ import ru.practicum.user.model.User;
 import ru.practicum.user.repository.UserRepository;
 
 import javax.validation.ValidationException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -34,8 +33,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDto> getUsers(List<Long> ids, Integer from, Integer size) {
         List<UserDto> userDtos;
-        Pageable page = PageRequest.of(from / size , size); // from / size , size
-        if(ids == null) {
+        Pageable page = PageRequest.of(from / size, size); // from / size , size
+        if (ids == null) {
             userDtos = userRepository.findAll(page).getContent().stream()
                     .map(UserDtoMapper::toUserDto)
                     .collect(Collectors.toList());
@@ -52,13 +51,13 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(int id) {
         userRepository.findById((long) id).orElseThrow(() -> new UserNotExistException("Пользователь не найден"));
         log.info("Пользователь с айди {} удален", id);
-        userRepository.deleteById((long)id);
+        userRepository.deleteById((long) id);
     }
 
     private void validateUser(NewUserRequest newUserRequest) {
         if (newUserRequest.getName() == null || newUserRequest.getEmail() == null ||
                 newUserRequest.getName().isEmpty() || newUserRequest.getEmail().isEmpty() ||
-        newUserRequest.getName().isBlank() || newUserRequest.getEmail().isBlank()) {
+                newUserRequest.getName().isBlank() || newUserRequest.getEmail().isBlank()) {
             throw new ValidationException();
         }
     }

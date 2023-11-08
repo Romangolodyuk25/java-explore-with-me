@@ -38,9 +38,9 @@ public class RequestServiceImpl implements RequestService {
     @Override
     public ParticipationRequestDto createRequest(long userId, long eventId) {
         User receivedUser = userRepository.findById(userId).orElseThrow(() -> new UserNotExistException("user not exist"));
-        Event receivedEvent =  eventRepository.findById(eventId).orElseThrow(() -> new EventNotExistException("event not exist"));
+        Event receivedEvent = eventRepository.findById(eventId).orElseThrow(() -> new EventNotExistException("event not exist"));
 
-        if(receivedEvent.getParticipantLimit() != 0 && (receivedEvent.getConfirmedRequests() == receivedEvent.getParticipantLimit())) {
+        if (receivedEvent.getParticipantLimit() != 0 && (receivedEvent.getConfirmedRequests() == receivedEvent.getParticipantLimit())) {
             throw new RequestDoesNotSatisfyRulesException("Ошибка данных при создании запроса");
         }
         if (requestRepository.findByRequester(userId).size() != 0 || receivedEvent.getInitiator().getId() == userId ||
@@ -89,13 +89,13 @@ public class RequestServiceImpl implements RequestService {
 
     @Override
     public List<ParticipationRequestDto> getRequestsForCurrentUser(long userId, long eventId) {
-      userRepository.findById(userId).orElseThrow(() -> new UserNotExistException("user not exist"));
-      eventRepository.findById(eventId).orElseThrow(() -> new EventNotExistException("event not exist"));
+        userRepository.findById(userId).orElseThrow(() -> new UserNotExistException("user not exist"));
+        eventRepository.findById(eventId).orElseThrow(() -> new EventNotExistException("event not exist"));
 
-      List<Request> requests = requestRepository.findByRequestEventForCurrentUser(userId, eventId);
-      return requests.stream()
-              .map(RequestDtoMapper::toParticipationRequestDto)
-              .collect(Collectors.toList());
+        List<Request> requests = requestRepository.findByRequestEventForCurrentUser(userId, eventId);
+        return requests.stream()
+                .map(RequestDtoMapper::toParticipationRequestDto)
+                .collect(Collectors.toList());
     }
 
 
