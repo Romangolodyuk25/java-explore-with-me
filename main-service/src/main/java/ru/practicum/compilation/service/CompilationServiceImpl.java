@@ -68,7 +68,7 @@ public class CompilationServiceImpl implements CompilationService {
     public void deleteCompilation(long compId) {
         compilationRepository.findById(compId).orElseThrow(() -> new CompilationNotExistException("Подборки не существует"));
         log.info("Объект с id {} удален", compId);
-        categoryRepository.deleteById(compId);
+        compilationRepository.deleteById(compId);
     }
 
     @Override
