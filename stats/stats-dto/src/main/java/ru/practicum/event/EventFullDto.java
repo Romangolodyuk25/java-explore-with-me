@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.Setter;
 import ru.practicum.category.CategoryDto;
 import ru.practicum.location.Location;
-import ru.practicum.State;
 import ru.practicum.user.UserShortDto;
 
 import java.time.format.DateTimeFormatter;

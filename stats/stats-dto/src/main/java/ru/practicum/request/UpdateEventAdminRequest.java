@@ -23,6 +23,6 @@ public class UpdateEventAdminRequest {
     Integer participantLimit;
     Boolean requestModeration;
     String stateAction;
-    @Length(min = 3 , max = 120)
+    @Length(min = 3, max = 120)
     String title;
 }

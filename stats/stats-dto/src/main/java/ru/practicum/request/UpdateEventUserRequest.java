@@ -7,8 +7,6 @@ import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 import ru.practicum.location.Location;
 
-import javax.validation.constraints.NotNull;
-
 @Getter
 @Setter
 @Builder
@@ -25,6 +23,6 @@ public class UpdateEventUserRequest {
     Integer participantLimit;
     Boolean requestModeration;
     String stateAction;
-    @Length(min = 3 , max = 120)
+    @Length(min = 3, max = 120)
     String title;
 }
