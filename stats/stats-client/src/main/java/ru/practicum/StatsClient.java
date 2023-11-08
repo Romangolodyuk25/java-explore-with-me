@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 @Component
 public class StatsClient {
@@ -22,9 +21,6 @@ public class StatsClient {
     private String path;
     private RestTemplate rest = new RestTemplate();
 
-//    public StatsClient(@Value("${stats-server.url}")String path) {
-//        this.path = path;
-//    }
 
     public StatsDtoRequest createHit(StatsDtoRequest statsDtoRequest) {
         HttpEntity<StatsDtoRequest> request = new HttpEntity<>(statsDtoRequest, defaultHeaders());
