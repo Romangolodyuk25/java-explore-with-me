@@ -9,12 +9,12 @@ import java.time.format.DateTimeFormatter;
 @UtilityClass
 public class RequestDtoMapper {
 
-    DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    private final DateTimeFormatter Formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public static ParticipationRequestDto toParticipationRequestDto(Request request) {
         return ParticipationRequestDto.builder()
                 .id((int) request.getId())
-                .created(FORMATTER.format(request.getCreated()))
+                .created(Formatter.format(request.getCreated()))
                 .event((int) request.getEvent().getId())
                 .requester(Math.toIntExact(request.getRequester().getId()))
                 .status(request.getStatus().name())
