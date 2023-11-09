@@ -51,7 +51,7 @@ public interface EventRepository extends JpaRepository<Event, Long> {
             "where upper(e.annotation) like upper(concat('%', ?1, '%')) " +
             "AND e.state = 'PUBLISHED' " +
             "AND e.category.id in ?2 AND e.paid = ?3 " +
-            "AND e.eventDate <= ?4 " +
+            "AND e.eventDate > ?4 " +
             "AND e.confirmedRequests < e.participantLimit ")
     Page<Event> findByEventWithEmptyStartDate(String text, List<Long> categories, Boolean paid, LocalDateTime time, Pageable pageable);
 

@@ -180,12 +180,19 @@ public class EventServiceImpl implements EventService {
                 .map(Event::getId)
                 .collect(Collectors.toList());
 
-        Map<Long, Long> veiws = getStatsForEvents(eventRepository.getMinDate(ids), ids);
+        LocalDateTime minDateTime = eventRepository.getMinDate(ids);
         List<EventFullDto> finalList = new ArrayList<>();
-        for (Event e : receivedEvent) {
-            finalList.add(EventDtoMapper.toFullDtoWithViews(e, veiws.getOrDefault(e.getId(), 0L)));
-        }
 
+        if (minDateTime != null) {
+            Map<Long, Long> veiws = getStatsForEvents(minDateTime, ids);
+            for (Event e : receivedEvent) {
+                finalList.add(EventDtoMapper.toFullDtoWithViews(e, veiws.getOrDefault(e.getId(), 0L)));
+            }
+        } else {
+            for (Event e : receivedEvent) {
+                finalList.add(EventDtoMapper.toFullDtoWithViews(e, 0L));
+            }
+        }
         if (receivedEvent.size() == 0) throw new EventNotExistException("Event not exist");
         Category category = categoryRepository.findById((long) finalList.get(0).getCategory().getId()).orElseThrow();
         User user = userRepository.findById(finalList.get(0).getInitiator().getId()).orElseThrow();
@@ -357,9 +364,15 @@ public class EventServiceImpl implements EventService {
         LocalDateTime minDate = eventRepository.getMinDate(ids);
         List<EventShortDto> finalList = new ArrayList<>();
 
-        Map<Long, Long> veiws = getStatsForEvents(minDate, ids);
-        for (Event event : receivedEvents) {
-            finalList.add(EventDtoMapper.toEventShortDtoWithViews(event, veiws.getOrDefault(event.getId(), 0L)));
+        if(minDate != null) {
+            Map<Long, Long> veiws = getStatsForEvents(minDate, ids);
+            for (Event event : receivedEvents) {
+                finalList.add(EventDtoMapper.toEventShortDtoWithViews(event, veiws.getOrDefault(event.getId(), 0L)));
+            }
+        } else {
+            for (Event event : receivedEvents) {
+                finalList.add(EventDtoMapper.toEventShortDtoWithViews(event, 0L));
+            }
         }
         return finalList;
     }
