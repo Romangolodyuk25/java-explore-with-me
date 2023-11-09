@@ -3,7 +3,6 @@ package ru.practicum.request.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import ru.practicum.Status;
 import ru.practicum.request.model.Request;
 
 import java.util.List;
