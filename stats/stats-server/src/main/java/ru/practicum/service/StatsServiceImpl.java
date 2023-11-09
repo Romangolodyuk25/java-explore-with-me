@@ -10,6 +10,7 @@ import ru.practicum.repository.StatsRepository;
 
 import javax.validation.ValidationException;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -35,10 +36,18 @@ public class StatsServiceImpl implements StatsService {
         }
 
         if (uris == null) {
-            return statsRepository.findHitsWithoutUris(timeStart, timeEnd);
+                return statsRepository.findHitsWithoutUris(timeStart, timeEnd);
         } else {
             if (unique == null || !unique) {
-                return statsRepository.findHitsWithUris(uris, timeStart, timeEnd);
+                List<StatsDtoResponse> responses = statsRepository.findHitsWithUris(uris, timeStart, timeEnd);
+                List<StatsDtoResponse> newResponses = new ArrayList<>();
+                for (StatsDtoResponse r : responses) {
+                    long count = r.getHits();
+                    r.setHits(++count);
+                    newResponses.add(r);
+                }
+                return newResponses;
+                //return statsRepository.findHitsWithUris(uris, timeStart, timeEnd);
             }
             return statsRepository.findHitsWithIsUnique(uris, timeStart, timeEnd);
         }
