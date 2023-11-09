@@ -22,7 +22,6 @@ import ru.practicum.exception.EventNotExistException;
 import ru.practicum.exception.UserNotExistException;
 import ru.practicum.request.UpdateEventAdminRequest;
 import ru.practicum.request.UpdateEventUserRequest;
-import ru.practicum.request.repository.RequestRepository;
 import ru.practicum.user.model.User;
 import ru.practicum.user.repository.UserRepository;
 
@@ -40,8 +39,6 @@ public class EventServiceImpl implements EventService {
     private final UserRepository userRepository;
     private final EventRepository eventRepository;
     private final CategoryRepository categoryRepository;
-    private final RequestRepository requestRepository;
-
 
     private final StatsClient statsClient;
 
@@ -364,7 +361,7 @@ public class EventServiceImpl implements EventService {
         LocalDateTime minDate = eventRepository.getMinDate(ids);
         List<EventShortDto> finalList = new ArrayList<>();
 
-        if(minDate != null) {
+        if (minDate != null) {
             Map<Long, Long> veiws = getStatsForEvents(minDate, ids);
             for (Event event : receivedEvents) {
                 finalList.add(EventDtoMapper.toEventShortDtoWithViews(event, veiws.getOrDefault(event.getId(), 0L)));
