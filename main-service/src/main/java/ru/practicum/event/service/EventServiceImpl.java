@@ -2,6 +2,7 @@ package ru.practicum.event.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -21,6 +22,7 @@ import ru.practicum.exception.EventNotExistException;
 import ru.practicum.exception.UserNotExistException;
 import ru.practicum.request.UpdateEventAdminRequest;
 import ru.practicum.request.UpdateEventUserRequest;
+import ru.practicum.request.repository.RequestRepository;
 import ru.practicum.user.model.User;
 import ru.practicum.user.repository.UserRepository;
 
@@ -38,6 +40,8 @@ public class EventServiceImpl implements EventService {
     private final UserRepository userRepository;
     private final EventRepository eventRepository;
     private final CategoryRepository categoryRepository;
+    private final RequestRepository requestRepository;
+
 
     private final StatsClient statsClient;
 
@@ -124,7 +128,7 @@ public class EventServiceImpl implements EventService {
             page = PageRequest.of(from / size, size, Sort.by(Sort.Direction.ASC, "views"));
         }
 
-        List<Event> receivedEvents;
+        Page<Event> receivedEvents;
 
         if (text == null && paid == null && rangeStart == null && rangeEnd == null && sort == null) {
             return eventRepository.findByCategory_IdIn(categories, page).stream()
@@ -138,12 +142,12 @@ public class EventServiceImpl implements EventService {
                 throw new ValidationException();
             }
             if (onlyAvailable) {
-                receivedEvents = eventRepository.findAllEventsIsOnlyAvailable(text, categories, paid, start, end, page).getContent();
+                receivedEvents = eventRepository.findAllEventsIsOnlyAvailable(text, categories, paid, start, end, page);
             } else {
-                receivedEvents = eventRepository.findAllEventsIsNotOnlyAvailable(text, categories, paid, start, end, page).getContent();
+                receivedEvents = eventRepository.findAllEventsIsNotOnlyAvailable(text, categories, paid, start, end, page);
             }
         } else {
-            receivedEvents = eventRepository.findByEventWithEmptyStartDate(text, categories, paid, LocalDateTime.now(), page).getContent();
+            receivedEvents = eventRepository.findByEventWithEmptyStartDate(text, categories, paid, LocalDateTime.now(), page);
         }
 
         statsClient.createHit(StatsDtoRequest.builder()
@@ -153,17 +157,7 @@ public class EventServiceImpl implements EventService {
                 .app("/ewm-main-service")
                 .build());
 
-        List<Long> ids = receivedEvents.stream()
-                .map(Event::getId)
-                .collect(Collectors.toList());
-
-        Map<Long, Long> veiws = getStatsForEvents(eventRepository.getMinDate(ids), ids);
-        List<EventShortDto> finalList = new ArrayList<>();
-        for (Event e : receivedEvents) {
-            finalList.add(EventDtoMapper.toEventShortDtoWithViews(e, veiws.getOrDefault(e.getId(), 0L)));
-        }
-
-        return finalList;
+        return incrementViewsAndMapEvent(receivedEvents);
     }
 
     @Override
@@ -354,5 +348,19 @@ public class EventServiceImpl implements EventService {
             veiws.put(eventId, response.getHits());
         }
         return veiws;
+    }
+
+    private List<EventShortDto> incrementViewsAndMapEvent(Page<Event> receivedEvents) {
+        List<Long> ids = receivedEvents.stream()
+                .map(Event::getId)
+                .collect(Collectors.toList());
+        LocalDateTime minDate = eventRepository.getMinDate(ids);
+        List<EventShortDto> finalList = new ArrayList<>();
+
+        Map<Long, Long> veiws = getStatsForEvents(minDate, ids);
+        for (Event event : receivedEvents) {
+            finalList.add(EventDtoMapper.toEventShortDtoWithViews(event, veiws.getOrDefault(event.getId(), 0L)));
+        }
+        return finalList;
     }
 }
