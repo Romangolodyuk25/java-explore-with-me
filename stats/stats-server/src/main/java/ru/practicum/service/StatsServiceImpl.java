@@ -39,15 +39,7 @@ public class StatsServiceImpl implements StatsService {
                 return statsRepository.findHitsWithoutUris(timeStart, timeEnd);
         } else {
             if (unique == null || !unique) {
-                List<StatsDtoResponse> responses = statsRepository.findHitsWithUris(uris, timeStart, timeEnd);
-                List<StatsDtoResponse> newResponses = new ArrayList<>();
-                for (StatsDtoResponse r : responses) {
-                    long count = r.getHits();
-                    r.setHits(++count);
-                    newResponses.add(r);
-                }
-                return newResponses;
-                //return statsRepository.findHitsWithUris(uris, timeStart, timeEnd);
+                return statsRepository.findHitsWithUris(uris, timeStart, timeEnd);
             }
             return statsRepository.findHitsWithIsUnique(uris, timeStart, timeEnd);
         }
