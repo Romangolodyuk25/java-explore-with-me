@@ -21,8 +21,4 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
             "where r.requester.id = ?1 ")
     List<Request> findByRequester(long userId);
 
-//    @Query("select r " +
-//            "from Request r " +
-//            "where r.status = '?1' AND r.event.id in ?2 ")
-//    List<Request> findByStatusAndEvent(String status, List<Long> eventsIds);
 }
