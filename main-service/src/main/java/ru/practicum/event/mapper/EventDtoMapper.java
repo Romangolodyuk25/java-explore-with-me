@@ -81,6 +81,20 @@ public class EventDtoMapper {
                 .build();
     }
 
+    public static EventShortDto toEventShortDtoWithViews(Event event, Long veiws) {
+        return EventShortDto.builder()
+                .id((int) event.getId())
+                .annotation(event.getAnnotation())
+                .category(CategoryDtoMapper.toCategoryDto(event.getCategory()))
+                .confirmedRequests(event.getConfirmedRequests())
+                .eventDate(FORMATTER.format(event.getEventDate()))
+                .initiator(UserDtoMapper.toUserShortDto(event.getInitiator()))
+                .paid(event.getPaid())
+                .title(event.getTitle())
+                .views(veiws)
+                .build();
+    }
+
     public static EventShortDto toEventShortDto(Event event) {
         return EventShortDto.builder()
                 .id((int) event.getId())

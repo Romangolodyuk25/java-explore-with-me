@@ -124,7 +124,7 @@ public class EventServiceImpl implements EventService {
             page = PageRequest.of(from / size, size, Sort.by(Sort.Direction.ASC, "views"));
         }
 
-        List<EventShortDto> eventShortDtos;
+        List<Event> receivedEvents;
 
         if (text == null && paid == null && rangeStart == null && rangeEnd == null && sort == null) {
             return eventRepository.findByCategory_IdIn(categories, page).stream()
@@ -138,18 +138,12 @@ public class EventServiceImpl implements EventService {
                 throw new ValidationException();
             }
             if (onlyAvailable) {
-                eventShortDtos = eventRepository.findAllEventsIsOnlyAvailable(text, categories, paid, start, end, page).stream()
-                        .map(EventDtoMapper::toEventShortDto)
-                        .collect(Collectors.toList());
+                receivedEvents = eventRepository.findAllEventsIsOnlyAvailable(text, categories, paid, start, end, page).getContent();
             } else {
-                eventShortDtos = eventRepository.findAllEventsIsNotOnlyAvailable(text, categories, paid, start, end, page).stream()
-                        .map(EventDtoMapper::toEventShortDto)
-                        .collect(Collectors.toList());
+                receivedEvents = eventRepository.findAllEventsIsNotOnlyAvailable(text, categories, paid, start, end, page).getContent();
             }
         } else {
-            eventShortDtos = eventRepository.findByEventWithEmptyStartDate(text, categories, paid, LocalDateTime.now(), page).stream()
-                    .map(EventDtoMapper::toEventShortDto)
-                    .collect(Collectors.toList());
+            receivedEvents = eventRepository.findByEventWithEmptyStartDate(text, categories, paid, LocalDateTime.now(), page).getContent();
         }
 
         statsClient.createHit(StatsDtoRequest.builder()
@@ -159,7 +153,17 @@ public class EventServiceImpl implements EventService {
                 .app("/ewm-main-service")
                 .build());
 
-        return eventShortDtos;
+        List<Long> ids = receivedEvents.stream()
+                .map(Event::getId)
+                .collect(Collectors.toList());
+
+        Map<Long, Long> veiws = getStatsForEvents(eventRepository.getMinDate(ids), ids);
+        List<EventShortDto> finalList = new ArrayList<>();
+        for (Event e : receivedEvents) {
+            finalList.add(EventDtoMapper.toEventShortDtoWithViews(e, veiws.getOrDefault(e.getId(), 0L)));
+        }
+
+        return finalList;
     }
 
     @Override
@@ -183,12 +187,10 @@ public class EventServiceImpl implements EventService {
                 .collect(Collectors.toList());
 
         Map<Long, Long> veiws = getStatsForEvents(eventRepository.getMinDate(ids), ids);
-        //id -> количество просмотров
         List<EventFullDto> finalList = new ArrayList<>();
         for (Event e : receivedEvent) {
             finalList.add(EventDtoMapper.toFullDtoWithViews(e, veiws.getOrDefault(e.getId(), 0L)));
         }
-        // РЕАЛИЗОВАТЬ ДОБАВЛЕНИЕ ПРОСМОТРА
 
         if (receivedEvent.size() == 0) throw new EventNotExistException("Event not exist");
         Category category = categoryRepository.findById((long) finalList.get(0).getCategory().getId()).orElseThrow();
