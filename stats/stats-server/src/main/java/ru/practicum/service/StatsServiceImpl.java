@@ -38,19 +38,9 @@ public class StatsServiceImpl implements StatsService {
                 return statsRepository.findHitsWithoutUris(timeStart, timeEnd);
         } else {
             if (unique == null || !unique) {
-                return statsRepository.findHitsWithUrisIsUniqueFalse(uris, timeStart, timeEnd);
-            } else {
-                return statsRepository.findHitsWithIsUniqueTrue(uris, timeStart, timeEnd);
+                return statsRepository.findHitsWithUris(uris, timeStart, timeEnd);
             }
+            return statsRepository.findHitsWithIsUniqueTrue(uris, timeStart, timeEnd);
         }
-
-//        if (uris == null) {
-//                return statsRepository.findHitsWithoutUris(timeStart, timeEnd);
-//        } else {
-//            if (unique == null || !unique) {
-//                return statsRepository.findHitsWithUris(uris, timeStart, timeEnd);
-//            }
-//            return statsRepository.findHitsWithIsUniqueTrue(uris, timeStart, timeEnd);
-//        }
     }
 }

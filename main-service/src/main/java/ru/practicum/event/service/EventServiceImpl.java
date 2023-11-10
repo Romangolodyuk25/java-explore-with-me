@@ -128,6 +128,12 @@ public class EventServiceImpl implements EventService {
         Page<Event> receivedEvents;
 
         if (text == null && paid == null && rangeStart == null && rangeEnd == null && sort == null) {
+            statsClient.createHit(StatsDtoRequest.builder()
+                    .timestamp(LocalDateTime.now().format(EventDtoMapper.FORMATTER))
+                    .ip(request.getRemoteAddr())
+                    .uri(request.getRequestURI())
+                    .app("/ewm-main-service")
+                    .build());
             return eventRepository.findByCategory_IdIn(categories, page).stream()
                     .map(EventDtoMapper::toEventShortDto)
                     .collect(Collectors.toList());
