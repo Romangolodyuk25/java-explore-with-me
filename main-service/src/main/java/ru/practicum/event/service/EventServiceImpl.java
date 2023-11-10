@@ -128,12 +128,7 @@ public class EventServiceImpl implements EventService {
         Page<Event> receivedEvents;
 
         if (text == null && paid == null && rangeStart == null && rangeEnd == null && sort == null) {
-            statsClient.createHit(StatsDtoRequest.builder()
-                    .timestamp(LocalDateTime.now().format(EventDtoMapper.FORMATTER))
-                    .ip(request.getRemoteAddr())
-                    .uri(request.getRequestURI())
-                    .app("/ewm-main-service")
-                    .build());
+            createStatsRequest(request);
             return eventRepository.findByCategory_IdIn(categories, page).stream()
                     .map(EventDtoMapper::toEventShortDto)
                     .collect(Collectors.toList());
@@ -153,49 +148,24 @@ public class EventServiceImpl implements EventService {
             receivedEvents = eventRepository.findByEventWithEmptyStartDate(text, categories, paid, LocalDateTime.now(), page);
         }
 
-        statsClient.createHit(StatsDtoRequest.builder()
-                .timestamp(LocalDateTime.now().format(EventDtoMapper.FORMATTER))
-                .ip(request.getRemoteAddr())
-                .uri(request.getRequestURI())
-                .app("/ewm-main-service")
-                .build());
+        createStatsRequest(request);
 
-        return incrementViewsAndMapEvent(receivedEvents);
+        return incrementViewsAndMapEventToShortDto(receivedEvents);
     }
 
     @Override
     public EventFullDto getEventByIdPublic(Long id, HttpServletRequest request) {
         eventRepository.findById(id).orElseThrow(() -> new EventNotExistException("Event not exist"));
 
-        statsClient.createHit(StatsDtoRequest.builder()
-                .timestamp(LocalDateTime.now().format(EventDtoMapper.FORMATTER))
-                .ip(request.getRemoteAddr())
-                .uri(request.getRequestURI())
-                .app("/ewm-main-service")
-                .build());
+        createStatsRequest(request);
 
         List<Event> receivedEvent = eventRepository.findByIdAndState(id, State.PUBLISHED);
         if (receivedEvent.size() == 0) {
             throw new EventNotExistException("event not exist");
         }
 
-        List<Long> ids = receivedEvent.stream()
-                .map(Event::getId)
-                .collect(Collectors.toList());
+        List<EventFullDto> finalList = incrementViewsAndMapEventToFullDto(receivedEvent);
 
-        LocalDateTime minDateTime = eventRepository.getMinDate(ids);
-        List<EventFullDto> finalList = new ArrayList<>();
-
-        if (minDateTime != null) {
-            Map<Long, Long> veiws = getStatsForEvents(minDateTime, ids);
-            for (Event e : receivedEvent) {
-                finalList.add(EventDtoMapper.toFullDtoWithViews(e, veiws.getOrDefault(e.getId(), 0L)));
-            }
-        } else {
-            for (Event e : receivedEvent) {
-                finalList.add(EventDtoMapper.toFullDtoWithViews(e, 0L));
-            }
-        }
         if (receivedEvent.size() == 0) throw new EventNotExistException("Event not exist");
         Category category = categoryRepository.findById((long) finalList.get(0).getCategory().getId()).orElseThrow();
         User user = userRepository.findById(finalList.get(0).getInitiator().getId()).orElseThrow();
@@ -360,7 +330,7 @@ public class EventServiceImpl implements EventService {
         return veiws;
     }
 
-    private List<EventShortDto> incrementViewsAndMapEvent(Page<Event> receivedEvents) {
+    private List<EventShortDto> incrementViewsAndMapEventToShortDto(Page<Event> receivedEvents) {
         List<Long> ids = receivedEvents.stream()
                 .map(Event::getId)
                 .collect(Collectors.toList());
@@ -378,5 +348,35 @@ public class EventServiceImpl implements EventService {
             }
         }
         return finalList;
+    }
+
+    private List<EventFullDto> incrementViewsAndMapEventToFullDto(List<Event> receivedEvent) {
+        List<Long> ids = receivedEvent.stream()
+                .map(Event::getId)
+                .collect(Collectors.toList());
+
+        LocalDateTime minDateTime = eventRepository.getMinDate(ids);
+        List<EventFullDto> finalList = new ArrayList<>();
+
+        if (minDateTime != null) {
+            Map<Long, Long> veiws = getStatsForEvents(minDateTime, ids);
+            for (Event e : receivedEvent) {
+                finalList.add(EventDtoMapper.toFullDtoWithViews(e, veiws.getOrDefault(e.getId(), 0L)));
+            }
+        } else {
+            for (Event e : receivedEvent) {
+                finalList.add(EventDtoMapper.toFullDtoWithViews(e, 0L));
+            }
+        }
+        return finalList;
+    }
+
+    private void createStatsRequest(HttpServletRequest request) {
+        statsClient.createHit(StatsDtoRequest.builder()
+                .timestamp(LocalDateTime.now().format(EventDtoMapper.FORMATTER))
+                .ip(request.getRemoteAddr())
+                .uri(request.getRequestURI())
+                .app("/ewm-main-service")
+                .build());
     }
 }
