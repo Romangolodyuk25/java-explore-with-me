@@ -16,7 +16,6 @@ import ru.practicum.event.repository.EventRepository;
 import ru.practicum.exception.CompilationNotExistException;
 import ru.practicum.exception.EventNotExistException;
 
-import javax.validation.ValidationException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -31,7 +30,7 @@ public class CompilationServiceImpl implements CompilationService {
 
     @Override
     public CompilationDto createCompilation(NewCompilationDto newCompilationDto) {
-        List<Event> events = validatedCompilation(newCompilationDto);
+        List<Event> events = getEvents(newCompilationDto);
         Compilation compilation = CompilationDtoMapper.toCompilation(newCompilationDto, events);
         return CompilationDtoMapper.toCompilationDto(compilationRepository.save(compilation));
     }
@@ -82,11 +81,7 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
 
-    private List<Event> validatedCompilation(NewCompilationDto newCompilationDto) {
-        if (newCompilationDto.getTitle() == null || newCompilationDto.getTitle().isBlank() ||
-                newCompilationDto.getTitle().isEmpty() || newCompilationDto.getTitle().length() > 50) {
-            throw new ValidationException("Ошибка валидации");
-        }
+    private List<Event> getEvents(NewCompilationDto newCompilationDto) {
 
         List<Event> events = new ArrayList<>();
         if (newCompilationDto.getEvents() != null) {

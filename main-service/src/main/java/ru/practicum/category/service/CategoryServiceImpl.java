@@ -27,15 +27,12 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto createCategory(NewCategoryDto newCategoryDto) {
-        //validateCategory(newCategoryDto);
-
         Category newCategory = CategoryDtoMapper.toCategory(newCategoryDto);
         return CategoryDtoMapper.toCategoryDto(categoryRepository.save(newCategory));
     }
 
     @Override
     public CategoryDto updateCategory(long catId, NewCategoryDto newCategoryDto) {
-        //validateCategory(newCategoryDto);
         Category receivedCategory = categoryRepository.findById(catId).orElseThrow(() -> new CategoryNotExistException("Категория не найдена"));
 
         receivedCategory.setTitle(newCategoryDto.getName());
@@ -67,10 +64,4 @@ public class CategoryServiceImpl implements CategoryService {
         log.info("Категория {} получена", receivedCategory);
         return CategoryDtoMapper.toCategoryDto(receivedCategory);
     }
-
-//    private void validateCategory(NewCategoryDto newCategoryDto) {
-//        if (newCategoryDto.getName() == null || newCategoryDto.getName().isEmpty() || newCategoryDto.getName().isBlank()) {
-//            throw new ValidationException("Ошибка валидации");
-//        }
-//    }
 }

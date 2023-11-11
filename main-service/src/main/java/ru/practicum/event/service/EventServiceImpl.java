@@ -204,22 +204,6 @@ public class EventServiceImpl implements EventService {
         if (event.getState().equals(State.PUBLISHED)) {
             throw new EventDoesNotSatisfyRulesException("Нельзя обновить опубликованную публикацию");
         }
-//        if (updateEventAdminRequest.getTitle() != null) {
-//            if (updateEventAdminRequest.getTitle().length() < 3 || updateEventAdminRequest.getTitle().length() > 120) {
-//                throw new ValidationException("Ошибка валидации title");
-//            }
-//        }
-//        if (updateEventAdminRequest.getDescription() != null) {
-//            if (updateEventAdminRequest.getDescription().length() < 20 || updateEventAdminRequest.getDescription().length() > 7000) {
-//                throw new ValidationException("Ошибка валидации description");
-//            }
-//        }
-//
-//        if (updateEventAdminRequest.getAnnotation() != null) {
-//            if (updateEventAdminRequest.getAnnotation().length() < 20 || updateEventAdminRequest.getAnnotation().length() > 2000) {
-//                throw new ValidationException("Ошибка валидации annotation");
-//            }
-//        }
         if (updateEventAdminRequest.getEventDate() != null) {
             LocalDateTime startNewTime = LocalDateTime.parse(updateEventAdminRequest.getEventDate(), EventDtoMapper.FORMATTER);
             if (startNewTime.isBefore(LocalDateTime.now()) || startNewTime.isBefore(event.getCreatedOn())) {
@@ -251,7 +235,7 @@ public class EventServiceImpl implements EventService {
         }
         if (adminRequest.getDescription() != null) receivedEvent.setDescription(adminRequest.getDescription());
         if (adminRequest.getEventDate() != null)
-            receivedEvent.setEventDate(LocalDateTime.parse(adminRequest.getEventDate(), EventDtoMapper.FORMATTER));//????
+            receivedEvent.setEventDate(LocalDateTime.parse(adminRequest.getEventDate(), EventDtoMapper.FORMATTER));
         if (adminRequest.getLocation() != null) {
             receivedEvent.setLongitude(adminRequest.getLocation().getLon());
             receivedEvent.setLatitude(adminRequest.getLocation().getLat());

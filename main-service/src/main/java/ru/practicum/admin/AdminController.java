@@ -35,8 +35,6 @@ public class AdminController {
     private final CompilationService compilationService;
     private final EventService eventService;
 
-    //Работа с ПОЛЬЗОВАТЕЛЯМИ
-
     @PostMapping("/users")
     @ResponseStatus(HttpStatus.CREATED)
     public UserDto createUser(@Valid @RequestBody NewUserRequest newUserRequest) {
@@ -60,8 +58,6 @@ public class AdminController {
         userService.deleteUser(id);
     }
 
-    //Работа с КАТЕГОРИЯМИ
-
     @PostMapping("/categories")
     @ResponseStatus(HttpStatus.CREATED)
     public CategoryDto createCategory(@Valid @RequestBody NewCategoryDto newCategoryDto) {
@@ -83,7 +79,6 @@ public class AdminController {
         categoryService.deleteCategory(catId);
     }
 
-    //Работа с Подборками Событий
     @PostMapping("/compilations")
     @ResponseStatus(HttpStatus.CREATED)
     public CompilationDto createCompilation(@Valid @RequestBody NewCompilationDto newCompilationDto) {
@@ -105,8 +100,6 @@ public class AdminController {
         log.info("id для удаления события {}", compId);
         compilationService.deleteCompilation(compId);
     }
-
-    //Работа с СОБЫТИЯМИ
 
     @GetMapping("/events")
     public List<EventFullDto> searchEvents(@RequestParam(required = false) List<Long> users,

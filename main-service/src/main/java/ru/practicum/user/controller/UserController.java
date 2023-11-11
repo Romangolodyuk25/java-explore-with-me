@@ -26,7 +26,6 @@ public class UserController {
     private final EventService eventService;
     private final RequestService requestService;
 
-    //Работа с СОБЫТИЯМИ(event)
     @PostMapping("/{userId}/events")
     @ResponseStatus(HttpStatus.CREATED)
     public EventFullDto createEvent(@PathVariable long userId,
@@ -58,8 +57,6 @@ public class UserController {
         return eventService.updateEventUser(userId, eventId, updateEventUserRequest);
     }
 
-    //РАБОТА С ЗАПРОСАМИ
-
     @PostMapping("/{userId}/requests")
     @ResponseStatus(HttpStatus.CREATED)
     public ParticipationRequestDto createRequest(@PathVariable long userId,
@@ -78,8 +75,6 @@ public class UserController {
        return requestService.cancelRequest(userId, requestId);
     }
 
-
-    //EVENTS
 
     @GetMapping("/{userId}/events/{eventId}/requests")
     public List<ParticipationRequestDto> getRequestsForCurrentUser(@PathVariable long userId, @PathVariable long eventId) {
