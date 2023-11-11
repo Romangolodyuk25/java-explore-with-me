@@ -14,7 +14,6 @@ import ru.practicum.event.repository.EventRepository;
 import ru.practicum.exception.CategoryNotExistException;
 import ru.practicum.exception.CategoryRelationWithEventException;
 
-import javax.validation.ValidationException;
 import java.util.List;
 import java.util.stream.Collectors;
 
