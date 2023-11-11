@@ -1,9 +1,6 @@
 package ru.practicum.request.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import ru.practicum.State;
 import ru.practicum.event.model.Event;
 import ru.practicum.user.model.User;
@@ -11,7 +8,8 @@ import ru.practicum.user.model.User;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "REQUESTS")
 @AllArgsConstructor
@@ -21,20 +19,20 @@ public class Request {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "request_id", nullable = false)
-    long id;
+    private long id;
 
     @Column(name = "created", nullable = false)
-    LocalDateTime created;
+    private LocalDateTime created;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id")
-    Event event;
+    private Event event;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "requester_id")
-    User requester;
+    private User requester;
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
-    State status;
+    private State status;
 }

@@ -43,17 +43,17 @@ public class EventServiceImpl implements EventService {
     private final StatsClient statsClient;
 
     @Override
-    public EventFullDto createEvent(int userId, NewEventDto newEventDto) {
+    public EventFullDto createEvent(long userId, NewEventDto newEventDto) {
         validationEvent(newEventDto);
-        Category receivedCategory = categoryRepository.findById((long) newEventDto.getCategory()).orElseThrow(() -> new CategoryNotExistException("Category not exist"));
-        User receivedUser = userRepository.findById((long) userId).orElseThrow(() -> new CategoryNotExistException("User not exist"));
+        Category receivedCategory = categoryRepository.findById(newEventDto.getCategory()).orElseThrow(() -> new CategoryNotExistException("Category not exist"));
+        User receivedUser = userRepository.findById(userId).orElseThrow(() -> new CategoryNotExistException("User not exist"));
         Event eventForBd = EventDtoMapper.toEvent(newEventDto, receivedCategory, receivedUser);
         return EventDtoMapper.toEventFullDto(eventRepository.save(eventForBd));
     }
 
     @Override
-    public List<EventShortDto> getEvent(int userId, Integer from, Integer size) {
-        userRepository.findById((long) userId).orElseThrow(() -> new CategoryNotExistException("User not exist"));
+    public List<EventShortDto> getEvent(long userId, Integer from, Integer size) {
+        userRepository.findById(userId).orElseThrow(() -> new CategoryNotExistException("User not exist"));
 
         Pageable page = PageRequest.of(from / size, size);
         return eventRepository.findByInitiator_Id(userId, page).stream()
@@ -62,10 +62,10 @@ public class EventServiceImpl implements EventService {
     }
 
     @Override
-    public EventFullDto getEventByIdPrivate(int userId, int eventId) {
-        userRepository.findById((long) userId).orElseThrow(() -> new CategoryNotExistException("User not exist"));
+    public EventFullDto getEventByIdPrivate(long userId, long eventId) {
+        userRepository.findById(userId).orElseThrow(() -> new CategoryNotExistException("User not exist"));
 
-        Event receivedEvent = eventRepository.findById((long) eventId).orElseThrow(() -> new EventNotExistException("event not exist"));
+        Event receivedEvent = eventRepository.findById(eventId).orElseThrow(() -> new EventNotExistException("event not exist"));
         return EventDtoMapper.toEventFullDto(receivedEvent);
     }
 
@@ -204,22 +204,22 @@ public class EventServiceImpl implements EventService {
         if (event.getState().equals(State.PUBLISHED)) {
             throw new EventDoesNotSatisfyRulesException("Нельзя обновить опубликованную публикацию");
         }
-        if (updateEventAdminRequest.getTitle() != null) {
-            if (updateEventAdminRequest.getTitle().length() < 3 || updateEventAdminRequest.getTitle().length() > 120) {
-                throw new ValidationException("Ошибка валидации title");
-            }
-        }
-        if (updateEventAdminRequest.getDescription() != null) {
-            if (updateEventAdminRequest.getDescription().length() < 20 || updateEventAdminRequest.getDescription().length() > 7000) {
-                throw new ValidationException("Ошибка валидации description");
-            }
-        }
-
-        if (updateEventAdminRequest.getAnnotation() != null) {
-            if (updateEventAdminRequest.getAnnotation().length() < 20 || updateEventAdminRequest.getAnnotation().length() > 2000) {
-                throw new ValidationException("Ошибка валидации annotation");
-            }
-        }
+//        if (updateEventAdminRequest.getTitle() != null) {
+//            if (updateEventAdminRequest.getTitle().length() < 3 || updateEventAdminRequest.getTitle().length() > 120) {
+//                throw new ValidationException("Ошибка валидации title");
+//            }
+//        }
+//        if (updateEventAdminRequest.getDescription() != null) {
+//            if (updateEventAdminRequest.getDescription().length() < 20 || updateEventAdminRequest.getDescription().length() > 7000) {
+//                throw new ValidationException("Ошибка валидации description");
+//            }
+//        }
+//
+//        if (updateEventAdminRequest.getAnnotation() != null) {
+//            if (updateEventAdminRequest.getAnnotation().length() < 20 || updateEventAdminRequest.getAnnotation().length() > 2000) {
+//                throw new ValidationException("Ошибка валидации annotation");
+//            }
+//        }
         if (updateEventAdminRequest.getEventDate() != null) {
             LocalDateTime startNewTime = LocalDateTime.parse(updateEventAdminRequest.getEventDate(), EventDtoMapper.FORMATTER);
             if (startNewTime.isBefore(LocalDateTime.now()) || startNewTime.isBefore(event.getCreatedOn())) {

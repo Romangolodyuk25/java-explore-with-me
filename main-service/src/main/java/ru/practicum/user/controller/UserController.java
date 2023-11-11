@@ -13,7 +13,6 @@ import ru.practicum.request.EventRequestStatusUpdateResult;
 import ru.practicum.request.ParticipationRequestDto;
 import ru.practicum.request.UpdateEventUserRequest;
 import ru.practicum.request.service.RequestService;
-import ru.practicum.user.service.UserService;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -23,21 +22,21 @@ import java.util.List;
 @Slf4j
 @RequestMapping("/users")
 public class UserController {
-    private final UserService userService;
+
     private final EventService eventService;
     private final RequestService requestService;
 
     //Работа с СОБЫТИЯМИ(event)
     @PostMapping("/{userId}/events")
     @ResponseStatus(HttpStatus.CREATED)
-    public EventFullDto createEvent(@PathVariable int userId,
+    public EventFullDto createEvent(@PathVariable long userId,
                                     @Valid @RequestBody NewEventDto newEventDto) {
         log.info("id Пользователя {}, объект для создания {}", userId, newEventDto);
         return eventService.createEvent(userId, newEventDto);
     }
 
     @GetMapping("/{userId}/events")
-    public List<EventShortDto> getEvent(@PathVariable int userId,
+    public List<EventShortDto> getEvent(@PathVariable long userId,
                                         @RequestParam(required = false, defaultValue = "0") Integer from,
                                         @RequestParam(required = false, defaultValue = "10") Integer size
                                   ) {
@@ -46,7 +45,7 @@ public class UserController {
     }
 
     @GetMapping("/{userId}/events/{eventId}")
-    public EventFullDto getEventById(@PathVariable int userId, @PathVariable int eventId) {
+    public EventFullDto getEventById(@PathVariable long userId, @PathVariable long eventId) {
         log.info("id пользователя {}, eventId {}", userId, eventId);
         return eventService.getEventByIdPrivate(userId, eventId);
     }
@@ -91,8 +90,8 @@ public class UserController {
 
     @PatchMapping("/{userId}/events/{eventId}/requests")
     public EventRequestStatusUpdateResult updateStatusForCurrentUser(@RequestBody EventRequestStatusUpdateRequest eventRequestStatusUpdateRequest,
-                                                                     @PathVariable int userId,
-                                                                     @PathVariable int eventId) {
+                                                                     @PathVariable long userId,
+                                                                     @PathVariable long eventId) {
         log.info("id пользователя {}, eventId {}", userId, eventId);
         return requestService.updateStatusForCurrentUser(eventRequestStatusUpdateRequest, userId, eventId);
     }

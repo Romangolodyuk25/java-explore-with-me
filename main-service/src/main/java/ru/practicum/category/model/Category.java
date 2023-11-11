@@ -1,13 +1,11 @@
 package ru.practicum.category.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -17,8 +15,8 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "category_id")
-    Long id;
+    private Long id;
 
     @Column(name = "title", nullable = false, length = 100, unique = true)
-    String title;
+    private String title;
 }

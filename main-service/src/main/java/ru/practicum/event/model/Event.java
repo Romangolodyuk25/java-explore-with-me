@@ -1,9 +1,6 @@
 package ru.practicum.event.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import ru.practicum.State;
 import ru.practicum.category.model.Category;
 import ru.practicum.user.model.User;
@@ -11,7 +8,8 @@ import ru.practicum.user.model.User;
 import javax.persistence.*;
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,56 +19,56 @@ public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "event_id")
-    long id;
+    private long id;
 
     @Column(name = "description")
-    String description;
+    private String description;
 
     @Column(name = "created_on")
-    LocalDateTime createdOn;
+    private LocalDateTime createdOn;
 
     @Column(name = "eventDate")
-    LocalDateTime eventDate;
+    private LocalDateTime eventDate;
 
     @Column(name = "annotation")
-    String annotation;
+    private String annotation;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_id")
-    Category category;
+    private Category category;
 
     @Column(name = "confirmed_requests")
-    int confirmedRequests;
+    private int confirmedRequests;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "initiator_id")
-    User initiator;
+    private User initiator;
 
     @Column(name = "latitude")
-    float latitude;
+    private float latitude;
 
     @Column(name = "longitude")
-    float longitude;
+    private float longitude;
 
     @Column(name = "paid")
-    Boolean paid;
+    private Boolean paid;
 
     @Column(name = "participant_limit")
-    int participantLimit;
+    private int participantLimit;
 
     @Column(name = "published_on")
-    LocalDateTime publishedOn;
+    private LocalDateTime publishedOn;
 
     @Column(name = "request_moderation")
-    Boolean requestModeration;
+    private Boolean requestModeration;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "state")
-    State state;
+    private State state;
 
     @Column(name = "title")
-    String title;
+    private String title;
 
     @Column(name = "views")
-    long views;
+    private long views;
 }

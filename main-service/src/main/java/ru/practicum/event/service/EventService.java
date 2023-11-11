@@ -12,11 +12,11 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 public interface EventService {
-    EventFullDto createEvent(int userId, NewEventDto newEventDto);
+    EventFullDto createEvent(long userId, NewEventDto newEventDto);
 
-    List<EventShortDto> getEvent(int userId, Integer from, Integer size);
+    List<EventShortDto> getEvent(long userId, Integer from, Integer size);
 
-    EventFullDto getEventByIdPrivate(int userId, int eventId);
+    EventFullDto getEventByIdPrivate(long userId, long eventId);
 
     EventFullDto updateEventUser(long userId, long eventId, UpdateEventUserRequest updateEventUserRequest);
 

@@ -1,13 +1,11 @@
 package ru.practicum.user.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -17,11 +15,11 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    Long id;
+    private Long id;
 
     @Column(name = "email", nullable = false, unique = true, length = 100)
-    String email;
+    private String email;
 
     @Column(name = "name", nullable = false, length = 50)
-    String name;
+    private String name;
 }

@@ -28,7 +28,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto createCategory(NewCategoryDto newCategoryDto) {
-        validateCategory(newCategoryDto);
+        //validateCategory(newCategoryDto);
 
         Category newCategory = CategoryDtoMapper.toCategory(newCategoryDto);
         return CategoryDtoMapper.toCategoryDto(categoryRepository.save(newCategory));
@@ -36,7 +36,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public CategoryDto updateCategory(long catId, NewCategoryDto newCategoryDto) {
-        validateCategory(newCategoryDto);
+        //validateCategory(newCategoryDto);
         Category receivedCategory = categoryRepository.findById(catId).orElseThrow(() -> new CategoryNotExistException("Категория не найдена"));
 
         receivedCategory.setTitle(newCategoryDto.getName());
@@ -69,12 +69,9 @@ public class CategoryServiceImpl implements CategoryService {
         return CategoryDtoMapper.toCategoryDto(receivedCategory);
     }
 
-    private void validateCategory(NewCategoryDto newCategoryDto) {
-        if (newCategoryDto.getName() == null || newCategoryDto.getName().isEmpty() || newCategoryDto.getName().isBlank()) {
-            throw new ValidationException();
-        }
-        if (newCategoryDto.getName().length() > 50) {
-            throw new ValidationException("Ошибка валидации");
-        }
-    }
+//    private void validateCategory(NewCategoryDto newCategoryDto) {
+//        if (newCategoryDto.getName() == null || newCategoryDto.getName().isEmpty() || newCategoryDto.getName().isBlank()) {
+//            throw new ValidationException("Ошибка валидации");
+//        }
+//    }
 }

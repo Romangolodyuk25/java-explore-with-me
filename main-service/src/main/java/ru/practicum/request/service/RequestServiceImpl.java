@@ -100,9 +100,9 @@ public class RequestServiceImpl implements RequestService {
 
 
     @Override
-    public EventRequestStatusUpdateResult updateStatusForCurrentUser(EventRequestStatusUpdateRequest eventRequestStatusUpdateRequest, int userId, int eventId) {
-        userRepository.findById((long) userId).orElseThrow(() -> new UserNotExistException("user not exist"));
-        Event receivedEvent = eventRepository.findById((long) eventId).orElseThrow(() -> new EventNotExistException("event not exist"));
+    public EventRequestStatusUpdateResult updateStatusForCurrentUser(EventRequestStatusUpdateRequest eventRequestStatusUpdateRequest, long userId, long eventId) {
+        userRepository.findById(userId).orElseThrow(() -> new UserNotExistException("user not exist"));
+        Event receivedEvent = eventRepository.findById(eventId).orElseThrow(() -> new EventNotExistException("event not exist"));
 
         EventRequestStatusUpdateResult eventRequestStatusUpdateResult = new EventRequestStatusUpdateResult(new ArrayList<>(), new ArrayList<>());
 

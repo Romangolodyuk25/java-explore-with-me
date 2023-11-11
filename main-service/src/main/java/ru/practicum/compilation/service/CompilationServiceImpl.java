@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import ru.practicum.category.repository.CategoryRepository;
 import ru.practicum.compilation.CompilationDto;
 import ru.practicum.compilation.NewCompilationDto;
 import ru.practicum.compilation.UpdateCompilationRequest;
@@ -27,7 +26,6 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class CompilationServiceImpl implements CompilationService {
 
-    private final CategoryRepository categoryRepository;
     private final CompilationRepository compilationRepository;
     private final EventRepository eventRepository;
 
@@ -41,8 +39,6 @@ public class CompilationServiceImpl implements CompilationService {
     @Override
     public CompilationDto updateCompilation(long compId, UpdateCompilationRequest updateCompilationRequest) {
         Compilation receivedCompilation = compilationRepository.findById(compId).orElseThrow(() -> new CompilationNotExistException("Подборки не существует"));
-
-        validateForUpdateCompilation(updateCompilationRequest);
 
         List<Event> events = new ArrayList<>();
         if (updateCompilationRequest.getEvents() != null) {
@@ -86,7 +82,6 @@ public class CompilationServiceImpl implements CompilationService {
     }
 
 
-    //ВАЛИДАЦИЯ
     private List<Event> validatedCompilation(NewCompilationDto newCompilationDto) {
         if (newCompilationDto.getTitle() == null || newCompilationDto.getTitle().isBlank() ||
                 newCompilationDto.getTitle().isEmpty() || newCompilationDto.getTitle().length() > 50) {
@@ -101,13 +96,5 @@ public class CompilationServiceImpl implements CompilationService {
             }
         }
         return events;
-    }
-
-    private void validateForUpdateCompilation(UpdateCompilationRequest updateCompilationRequest) {
-        if (updateCompilationRequest.getTitle() != null) {
-            if (updateCompilationRequest.getTitle().length() > 50 || updateCompilationRequest.getTitle().isBlank()) {
-                throw new ValidationException("Ошибка валидации");
-            }
-        }
     }
 }

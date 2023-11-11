@@ -1,15 +1,13 @@
 package ru.practicum.compilation.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import ru.practicum.event.model.Event;
 
 import javax.persistence.*;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -19,17 +17,17 @@ public class Compilation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "compilation_id")
-    Long id;
+    private Long id;
 
     @Column(name = "title", length = 50, nullable = false)
-    String title;
+    private String title;
 
     @Column(name = "pinned")
-    Boolean pinned;
+    private Boolean pinned;
 
     @ManyToMany
     @JoinTable(name = "events_compilations",
             joinColumns = {@JoinColumn(name = "compilation_id")},
             inverseJoinColumns = {@JoinColumn(name = "event_id")})
-    List<Event> events;
+    private List<Event> events;
 }

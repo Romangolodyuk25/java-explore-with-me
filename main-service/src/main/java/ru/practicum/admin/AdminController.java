@@ -55,7 +55,7 @@ public class AdminController {
 
     @DeleteMapping("/users/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteUser(@PathVariable int id) {
+    public void deleteUser(@PathVariable long id) {
         log.info("Айди пользователя для удаления {}", id);
         userService.deleteUser(id);
     }
@@ -71,13 +71,14 @@ public class AdminController {
 
     @PatchMapping("/categories/{catId}")
     @ResponseStatus(HttpStatus.OK)
-    public CategoryDto updateCategory(@PathVariable int catId, @RequestBody NewCategoryDto newCategoryDto) {
+    public CategoryDto updateCategory(@PathVariable long catId,
+                                      @Valid @RequestBody NewCategoryDto newCategoryDto) {
         return categoryService.updateCategory(catId, newCategoryDto);
     }
 
     @DeleteMapping("/categories/{catId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteCategory(@PathVariable int catId) {
+    public void deleteCategory(@PathVariable long catId) {
         log.info("Удалена категория c айди {}", catId);
         categoryService.deleteCategory(catId);
     }
@@ -85,14 +86,15 @@ public class AdminController {
     //Работа с Подборками Событий
     @PostMapping("/compilations")
     @ResponseStatus(HttpStatus.CREATED)
-    public CompilationDto createCompilation(@RequestBody NewCompilationDto newCompilationDto) {
+    public CompilationDto createCompilation(@Valid @RequestBody NewCompilationDto newCompilationDto) {
         log.info("Объект для создания {}", newCompilationDto);
         return compilationService.createCompilation(newCompilationDto);
     }
 
     @PatchMapping("/compilations/{compId}")
     @ResponseStatus(HttpStatus.OK)
-    public CompilationDto updateCompilation(@PathVariable long compId, @RequestBody UpdateCompilationRequest updateCompilationRequest) {
+    public CompilationDto updateCompilation(@PathVariable long compId,
+                                            @Valid @RequestBody UpdateCompilationRequest updateCompilationRequest) {
         log.info("id для обновления {} объект для обновления {}", compId, updateCompilationRequest);
         return compilationService.updateCompilation(compId, updateCompilationRequest);
     }
@@ -120,7 +122,7 @@ public class AdminController {
 
     @PatchMapping("/events/{eventId}")
     public EventFullDto updateEventAdmin(@PathVariable long eventId,
-                                         @RequestBody UpdateEventAdminRequest adminRequest) {
+                                         @Valid @RequestBody UpdateEventAdminRequest adminRequest) {
         log.info("Id Ивента {} , Объект для обновления {} ", eventId, adminRequest);
         return eventService.updateEventAdmin(eventId, adminRequest);
     }
