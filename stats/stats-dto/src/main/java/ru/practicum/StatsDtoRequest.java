@@ -4,10 +4,10 @@ import lombok.*;
 
 import javax.validation.constraints.NotNull;
 
-@Getter
-@Setter
+@Data
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class StatsDtoRequest {
     @NotNull
     String app;

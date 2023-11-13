@@ -14,7 +14,7 @@ public interface StatsRepository extends JpaRepository<Hit, Long> {
     @Query("select new ru.practicum.StatsDtoResponse(h.app, h.uri, count(h.ip)) " +
             "from Hit h " +
             "where h.timestamp >= ?1 AND h.timestamp <= ?2 " +
-            "group by h.app, h.uri, h.ip " +
+            "group by h.app, h.uri " +
             "order by count(h.ip) desc")
     List<StatsDtoResponse> findHitsWithoutUris(LocalDateTime start, LocalDateTime end);
 
@@ -22,14 +22,21 @@ public interface StatsRepository extends JpaRepository<Hit, Long> {
     @Query("select new ru.practicum.StatsDtoResponse(h.app, h.uri, count(h.ip)) " +
             "from Hit h " +
             "where h.uri in ?1 AND h.timestamp >= ?2 AND h.timestamp <= ?3 " +
-            "group by h.app, h.uri, h.ip " +
+            "group by h.app, h.uri " +
             "order by count(h.ip) desc")
     List<StatsDtoResponse> findHitsWithUris(List<String> uri, LocalDateTime start, LocalDateTime end);
 
     @Query("select new ru.practicum.StatsDtoResponse(h.app, h.uri, count(distinct(h.ip)))" +
             "from Hit h " +
             "where h.uri in ?1 AND h.timestamp >= ?2 AND h.timestamp <= ?3 " +
-            "group by h.app, h.uri, h.ip " +
+            "group by h.app, h.uri " +
             "order by count(h.ip) desc")
-    List<StatsDtoResponse> findHitsWithIsUnique(List<String> uri, LocalDateTime start, LocalDateTime end);
+    List<StatsDtoResponse> findHitsWithIsUniqueTrue(List<String> uri, LocalDateTime start, LocalDateTime end);
+
+    @Query("select new ru.practicum.StatsDtoResponse(h.app, h.uri, count(h.ip))" +
+            "from Hit h " +
+            "where h.uri in ?1 AND h.timestamp >= ?2 AND h.timestamp <= ?3 " +
+            "group by h.app, h.uri " +
+            "order by count(h.ip) desc")
+    List<StatsDtoResponse> findHitsWithUrisIsUniqueFalse(List<String> uri, LocalDateTime start, LocalDateTime end);
 }

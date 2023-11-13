@@ -3,6 +3,7 @@ package ru.practicum.controller;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.StatsDtoRequest;
 import ru.practicum.StatsDtoResponse;
@@ -19,6 +20,7 @@ public class StatsController {
     private final StatsService statsService;
 
     @PostMapping("/hit")
+    @ResponseStatus(HttpStatus.CREATED)
     public StatsDtoRequest createHit(@Valid @RequestBody StatsDtoRequest statsDtoRequest) {
         log.info("Объект для сохранения {} ", statsDtoRequest);
         return statsService.createHit(statsDtoRequest);

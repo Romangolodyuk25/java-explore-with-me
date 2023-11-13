@@ -8,6 +8,7 @@ import ru.practicum.mapper.StatsDtoMapper;
 import ru.practicum.model.Hit;
 import ru.practicum.repository.StatsRepository;
 
+import javax.validation.ValidationException;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -29,13 +30,17 @@ public class StatsServiceImpl implements StatsService {
         LocalDateTime timeStart = LocalDateTime.parse(start, StatsDtoMapper.FORMAT);
         LocalDateTime timeEnd = LocalDateTime.parse(end, StatsDtoMapper.FORMAT);
 
+        if (timeStart.isAfter(timeEnd)) {
+            throw new ValidationException("Ошибка валидации");
+        }
+
         if (uris == null) {
-            return statsRepository.findHitsWithoutUris(timeStart, timeEnd);
+                return statsRepository.findHitsWithoutUris(timeStart, timeEnd);
         } else {
             if (unique == null || !unique) {
                 return statsRepository.findHitsWithUris(uris, timeStart, timeEnd);
             }
-            return statsRepository.findHitsWithIsUnique(uris, timeStart, timeEnd);
+            return statsRepository.findHitsWithIsUniqueTrue(uris, timeStart, timeEnd);
         }
     }
 }
