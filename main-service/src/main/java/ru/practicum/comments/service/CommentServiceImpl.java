@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class CommentServiceImpl implements CommentService{
+public class CommentServiceImpl implements CommentService {
 
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
@@ -90,11 +90,11 @@ public class CommentServiceImpl implements CommentService{
             throw new CommentDoesNotSatisfyRulesException("Обновление комментария не удовлетворяет правилам");
         }
 
-       if (commentDtoIn.getText()!= null) {
-           receivedComment.setText(commentDtoIn.getText());
-       }
+        if (commentDtoIn.getText() != null) {
+            receivedComment.setText(commentDtoIn.getText());
+        }
 
-       return CommentDtoMapper.toCommentDtoOut(commentRepository.save(receivedComment));
+        return CommentDtoMapper.toCommentDtoOut(commentRepository.save(receivedComment));
     }
 
 }

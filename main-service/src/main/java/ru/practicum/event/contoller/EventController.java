@@ -2,10 +2,8 @@ package ru.practicum.event.contoller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.SortEnum;
-import ru.practicum.comment.CommentDtoIn;
 import ru.practicum.comment.CommentDtoOut;
 import ru.practicum.comments.service.CommentService;
 import ru.practicum.event.EventFullDto;
@@ -34,10 +32,10 @@ public class EventController {
                                                        @RequestParam(required = false) String rangeEnd,
                                                        @RequestParam(required = false, defaultValue = "false") Boolean onlyAvailable,
                                                        @RequestParam(required = false) SortEnum sort,
-                                                       @RequestParam(defaultValue = "0")  @PositiveOrZero int from,
+                                                       @RequestParam(defaultValue = "0") @PositiveOrZero int from,
                                                        @RequestParam(defaultValue = "10") @Positive int size,
                                                        HttpServletRequest request
-                                                       ) {
+    ) {
         log.info("Переданные параметры: text {}, categories {}, paid {}, rangeStart {}, rangeEnd {}, onlAvailable {}," +
                 " sort {}, from {}, size {}", text, categories, paid, rangeStart, rangeEnd, onlyAvailable, sort, from, size);
         log.info("client ip: {}", request.getRemoteAddr());

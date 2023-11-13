@@ -1,6 +1,8 @@
 # java-explore-with-me
 Template repository for ExploreWithMe project.
 
+Pull-request - https://github.com/Romangolodyuk25/java-explore-with-me/pull/6
+
 Добро пожаловать в репозиторий проекта java-explore-with-me!
 
 Данное приложние умеет:
