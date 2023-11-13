@@ -3,10 +3,12 @@ package ru.practicum.event.model;
 import lombok.*;
 import ru.practicum.State;
 import ru.practicum.category.model.Category;
+import ru.practicum.comments.model.Comment;
 import ru.practicum.user.model.User;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -71,4 +73,10 @@ public class Event {
 
     @Column(name = "views")
     private long views;
+
+    @ManyToMany
+    @JoinTable(name = "EVENTS_COMMENTS",
+            joinColumns = {@JoinColumn(name = "event_id")},
+            inverseJoinColumns = {@JoinColumn(name = "comment_id")})
+    private List<Comment> comments;
 }

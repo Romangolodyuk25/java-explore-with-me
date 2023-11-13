@@ -4,6 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import ru.practicum.comment.CommentDtoIn;
+import ru.practicum.comment.CommentDtoOut;
+import ru.practicum.comments.service.CommentService;
 import ru.practicum.event.EventFullDto;
 import ru.practicum.event.EventShortDto;
 import ru.practicum.event.NewEventDto;
@@ -25,6 +28,7 @@ public class UserController {
 
     private final EventService eventService;
     private final RequestService requestService;
+    private final CommentService commentService;
 
     @PostMapping("/{userId}/events")
     @ResponseStatus(HttpStatus.CREATED)
@@ -38,7 +42,7 @@ public class UserController {
     public List<EventShortDto> getEvent(@PathVariable long userId,
                                         @RequestParam(required = false, defaultValue = "0") Integer from,
                                         @RequestParam(required = false, defaultValue = "10") Integer size
-                                  ) {
+    ) {
         log.info("Айди юзера {}, from {}, size {}", userId, from, size);
         return eventService.getEvent(userId, from, size);
     }
@@ -72,7 +76,7 @@ public class UserController {
 
     @PatchMapping("/{userId}/requests/{requestId}/cancel")
     public ParticipationRequestDto cancelRequest(@PathVariable long userId, @PathVariable long requestId) {
-       return requestService.cancelRequest(userId, requestId);
+        return requestService.cancelRequest(userId, requestId);
     }
 
 
@@ -90,4 +94,38 @@ public class UserController {
         log.info("id пользователя {}, eventId {}", userId, eventId);
         return requestService.updateStatusForCurrentUser(eventRequestStatusUpdateRequest, userId, eventId);
     }
+
+    @PostMapping("/{userId}/events/{eventId}/comments")
+    @ResponseStatus(HttpStatus.CREATED)
+    public CommentDtoOut createdComment(@Valid @RequestBody CommentDtoIn commentDtoIn,
+                                        @PathVariable long eventId,
+                                        @PathVariable long userId) {
+        log.info("Переданные параметры : comment {} , eventId {}, userId {} ", commentDtoIn, eventId, userId);
+        return commentService.createdComment(commentDtoIn, eventId, userId);
+    }
+
+    @PatchMapping("/{userId}/events/{eventId}/comments/{commentId}")
+    public CommentDtoOut updateComment(@Valid @RequestBody CommentDtoIn commentDtoIn,
+                                       @PathVariable long eventId,
+                                       @PathVariable long userId,
+                                       @PathVariable long commentId) {
+        log.info("Переданные параметры : comment {} , eventId {}, userId {}, commentId {} ", commentDtoIn, eventId, userId, commentId);
+        return commentService.updateComment(commentDtoIn, eventId, userId, commentId);
+    }
+
+    @DeleteMapping("/{userId}/events/{eventId}/comments/{commentId}")
+    public void deleteComment(@PathVariable long userId,
+                              @PathVariable long eventId,
+                              @PathVariable long commentId) {
+        log.info("Переданный праметр userId {} , eventId {}, commentId {}", userId, eventId, commentId);
+        commentService.deleteComment(userId, eventId, commentId);
+    }
+
+    @GetMapping("/{userId}/events/{eventId}/comments")
+    public List<CommentDtoOut> getCommentsForCurrentUserInCurrentEvent(@PathVariable long userId,
+                                                                       @PathVariable long eventId) {
+        log.info("Переданный праметр userId {} , eventId {}", userId, eventId);
+        return commentService.getCommentsForCurrentUserInCurrentEvent(userId, eventId);
+    }
+
 }

@@ -107,6 +107,14 @@ public class ErrorHandler {
     }
 
     @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public ApiError commentNotExistHandler(CommentNotExistException e) {
+        log.error("комментарий не найден {}", e.getMessage(), e);
+        String stackTrace = getStackTrace(e);
+        return new ApiError(e.getMessage(), stackTrace, HttpStatus.BAD_REQUEST.name(), LocalDateTime.now().format(formatter));
+    }
+
+    @ExceptionHandler
     @ResponseStatus(HttpStatus.CONFLICT)
     public ApiError eventDoesNotSatisfyRulesException(EventDoesNotSatisfyRulesException e) {
         log.error("Событие не удовлетворяет правилам редактирования {}", e.getMessage(), e);
@@ -135,6 +143,22 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.CONFLICT)
     public ApiError categoryRelationHandler(CategoryRelationWithEventException e) {
         log.error("Категория связана с событием {}", e.getMessage(), e);
+        String stackTrace = getStackTrace(e);
+        return new ApiError(e.getMessage(), stackTrace, HttpStatus.CONFLICT.name(), LocalDateTime.now().format(formatter));
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ApiError commentDoesSatisfyRulesHandler(CommentDoesNotSatisfyRulesException e) {
+        log.error("Комментарий не удовлетворяет правилам создания {}", e.getMessage(), e);
+        String stackTrace = getStackTrace(e);
+        return new ApiError(e.getMessage(), stackTrace, HttpStatus.CONFLICT.name(), LocalDateTime.now().format(formatter));
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public ApiError userIsNotOwnerHandler(UserIsNotOwner e) {
+        log.error("Юзер не является владельцем {}", e.getMessage(), e);
         String stackTrace = getStackTrace(e);
         return new ApiError(e.getMessage(), stackTrace, HttpStatus.CONFLICT.name(), LocalDateTime.now().format(formatter));
     }
