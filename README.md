@@ -1,7 +1,7 @@
 # java-explore-with-me
 Template repository for ExploreWithMe project.
 
-# java-filmorate
+Pull-request - https://github.com/Romangolodyuk25/java-explore-with-me/pull/6
 
 Добро пожаловать в репозиторий проекта java-explore-with-me!
 
@@ -25,6 +25,8 @@ Template repository for ExploreWithMe project.
 
 **8.Создавать, обновлять или удалять Категории для Событий**
 
+**9.СОздавать, обновлять, получать, удалять Комментарии для Событий , а так же получать комметарияя текущего события или для определенного пользователя**
+
 Таблицы который используются для работы:
 
 1.EVENTS - хранит в себе информацию о самих событиях, дату их создание и намеченную дату проведение, а так же множество уточняющей информации.
@@ -38,7 +40,12 @@ Template repository for ExploreWithMe project.
 
 6.USERS - хранит информацию пользователе, его id(Первичный ключ), имя, логин, email, дату рождения
 
-7.EVENTS_COMPILATIONS - хранит информацию о событиях, которые находятся в подборке, связан с таблицами EVENTS И USERS внешние ключе event_id и user_id
+7.EVENTS_COMPILATIONS - хранит информацию о событиях и подборках событий, которые находятся в подборке, связан с таблицами EVENTS И USERS внешние ключе event_id и user_id
+
+8.COMMENTS - хранит информацию о оставленных на события комметаряих, имеет первичнчй плюч comment_id, связан с таблицей USERS и EVENTS через внешние ключи user_id и event_id
+
+9.EVENTS_COMMENTS - хранит информацию о айди коментариев и событий, связан с таблицами EVENTS И COMMENTS внешние ключе event_id и comment_id
+
 
 
 
